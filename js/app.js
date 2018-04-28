@@ -1,7 +1,9 @@
+var w = 102;
+var h = 80;
 // Enemies our player must avoid
 var Enemy = function() {
-    this.x = 0;
-    this.y = 0;
+    this.x = w;
+    this.y = h;
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -27,8 +29,9 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    this.x = 100;
-    this.y = 100;
+    //Temporary code to locate the player on the middle of the bottom grass area. @TODO randomize X position.
+    this.x = 2*w;
+    this.y = 4*h;
     this.sprite = 'images/char-boy.png'
 }
 
@@ -37,7 +40,31 @@ Player.prototype.update = function(dt) {
 }
 
 Player.prototype.handleInput = function(keyCode) {
-    console.log(keyCode);
+    //console.log(keyCode);
+    var currentPositionX = this.x;
+    var currentPositionY = this.y;
+    switch(keyCode) {
+        case 'left':
+            currentPositionX -= w;
+            break;
+        case 'up':
+            currentPositionY -= h;
+            break;
+        case 'right':
+            currentPositionX += w;
+            break;
+        case 'down':
+            currentPositionY += h;
+            break;
+    }
+    //@TODO Validate position, if valid move. Also validate it has not finished
+    if (currentPositionY/h == 0) {
+        console.log("Restart game");
+    }
+    else if(!(currentPositionX/w > 4) && !(currentPositionX/w < 0) && !(currentPositionY/h < 0) && !(currentPositionY/h > 5)) {
+        this.x = currentPositionX;
+        this.y = currentPositionY;
+    }
 }
 
 Player.prototype.render = function() {
@@ -62,6 +89,5 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
 });
