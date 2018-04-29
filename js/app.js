@@ -1,5 +1,5 @@
-var w = 102;
-var h = 80;
+let w = 102;
+let h = 80;
 // Enemies our player must avoid
 var Enemy = function() {
     this.x = w;
@@ -18,6 +18,7 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    //console.log("update enemy "+dt);
 };
 
 // Draw the enemy on the screen, required method for game
@@ -29,18 +30,21 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
-    //Temporary code to locate the player on the middle of the bottom grass area. @TODO randomize X position.
-    this.x = 2*w;
-    this.y = 4*h;
+    this.resetPlayer();
+    this.score = 0;
     this.sprite = 'images/char-boy.png'
 }
 
 Player.prototype.update = function(dt) {
-
+    //Itereate through the enemies array and detect collisions.
+    allEnemies.forEach(function(enemy) {
+        if (enemy.x/w === this.x/w && this.y/h === enemy.y/h) {
+            this.loose();
+        }
+    }, this);
 }
 
 Player.prototype.handleInput = function(keyCode) {
-    //console.log(keyCode);
     var currentPositionX = this.x;
     var currentPositionY = this.y;
     switch(keyCode) {
@@ -57,9 +61,8 @@ Player.prototype.handleInput = function(keyCode) {
             currentPositionY += h;
             break;
     }
-    //@TODO Validate position, if valid move. Also validate it has not finished
     if (currentPositionY/h == 0) {
-        console.log("Restart game");
+        this.win();
     }
     else if(!(currentPositionX/w > 4) && !(currentPositionX/w < 0) && !(currentPositionY/h < 0) && !(currentPositionY/h > 5)) {
         this.x = currentPositionX;
@@ -71,6 +74,22 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+Player.prototype.win = function() {
+    this.score ++;
+    console.log("Score "+this.score);
+    this.resetPlayer();
+}
+
+Player.prototype.loose = function() {
+    console.log("lost");
+    this.resetPlayer();
+}
+
+//Locate the player on the middle of the bottom grass area. @TODO randomize X position.
+Player.prototype.resetPlayer = function() {
+    this.x = 2*w;
+    this.y = 4*h;
+}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
