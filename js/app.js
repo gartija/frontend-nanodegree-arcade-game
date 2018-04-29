@@ -1,24 +1,22 @@
-let w = 102;
-let h = 80;
+let w = 101;
+let h = 83;
 // Enemies our player must avoid
 var Enemy = function() {
-    this.x = w;
-    this.y = h;
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    this.x = -1*w;
+    this.y = (Math.floor(Math.random()*3)+1)*h;
+    this.speed = (Math.floor(Math.random()*4+1))*150;
     this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    //console.log("update enemy "+dt);
+    if (this.x<5*w) {
+        this.x += dt*this.speed;
+    }
+    else {
+        this.x = -w;
+    }
 };
 
 // Draw the enemy on the screen, required method for game
@@ -38,7 +36,7 @@ var Player = function() {
 Player.prototype.update = function(dt) {
     //Itereate through the enemies array and detect collisions.
     allEnemies.forEach(function(enemy) {
-        if (enemy.x/w === this.x/w && this.y/h === enemy.y/h) {
+        if (this.x <= (enemy.x + w/2) && this.x >= (enemy.x - w/2)  && this.y/h === enemy.y/h) {
             this.loose();
         }
     }, this);
@@ -87,14 +85,17 @@ Player.prototype.loose = function() {
 
 //Locate the player on the middle of the bottom grass area. @TODO randomize X position.
 Player.prototype.resetPlayer = function() {
-    this.x = 2*w;
-    this.y = 4*h;
+    this.x = (Math.floor(Math.random()*5))*w;
+    this.y = 5*h;
+    allEnemies[0] = new Enemy();
+    allEnemies[1] = new Enemy();
+    allEnemies[2] = new Enemy();
+    allEnemies[3] = new Enemy();
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 allEnemies = [];
-allEnemies[0] = new Enemy();
 // Place the player object in a variable called player
 player = new Player();
 
