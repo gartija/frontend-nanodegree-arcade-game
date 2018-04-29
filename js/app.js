@@ -87,8 +87,8 @@ Player.prototype.loose = function() {
 
 //Locate the player on the middle of the bottom grass area. @TODO randomize X position.
 Player.prototype.resetPlayer = function() {
-    this.x = 2*w;
-    this.y = 4*h;
+    this.x = (Math.floor(Math.random()*5))*w;
+    this.y = 5*h;
 }
 
 // Now instantiate your objects.
